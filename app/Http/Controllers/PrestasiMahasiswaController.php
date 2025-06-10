@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bidang;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
+use App\Models\PengajuanPrestasiAdminNote;
 use App\Models\Prestasi;
 use App\Models\PrestasiMahasiswa;
 use Illuminate\Http\Request;
@@ -122,6 +123,22 @@ class PrestasiMahasiswaController extends Controller
             'status' => 'pending',
         ]);
 
+
+        $adminList = Dosen::where('role', 'admin')->get();
+
+        $data = [];
+        foreach ($adminList as $admin) {
+            $data[] = [
+                'prestasi_id' => $prestasi->id,
+                'dosen_id' => $admin->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        if (!empty($data)) {
+            PengajuanPrestasiAdminNote::insert($data);
+        }
+
         $prestasi->bidangs()->sync([$request->bidang]);
 
         $prestasi->dosens()->sync($request->dosen_pembimbing);
@@ -200,17 +217,17 @@ class PrestasiMahasiswaController extends Controller
         $mahasiswas = Mahasiswa::select('id', 'nama', 'nim')->get();
         $dosens = Dosen::select('id', 'nama', 'nidn')->get();
 
-        $existingFileName = $prestasi->foto_kegiatan; 
-        $existingFilePath = 'storage/' . $existingFileName; 
+        $existingFileName = $prestasi->foto_kegiatan;
+        $existingFilePath = 'storage/' . $existingFileName;
 
-        $existingPosterName = $prestasi->file_poster; 
+        $existingPosterName = $prestasi->file_poster;
         $existingPosterPath = 'storage/' . $existingPosterName;
 
-        $existingFileSuratTugas = $prestasi->file_surat_tugas; 
-        $existingFileSuratTugasPath = 'storage/' . $existingFileSuratTugas; 
+        $existingFileSuratTugas = $prestasi->file_surat_tugas;
+        $existingFileSuratTugasPath = 'storage/' . $existingFileSuratTugas;
 
         $existingFileSertifikat = $prestasi->file_sertifikat;
-        $existingFileSertifikatPath = 'storage/' . $existingFileSertifikat; 
+        $existingFileSertifikatPath = 'storage/' . $existingFileSertifikat;
 
         return view('mahasiswa.prestasi.update', compact(
             'breadcrumb',
@@ -220,14 +237,14 @@ class PrestasiMahasiswaController extends Controller
             'bidangs',
             'mahasiswas',
             'dosens',
-            'existingFileName', 
-            'existingFilePath',  
-            'existingPosterName', 
-            'existingPosterPath',  
-            'existingFileSuratTugas', 
-            'existingFileSuratTugasPath', 
-            'existingFileSertifikat', 
-            'existingFileSertifikatPath' 
+            'existingFileName',
+            'existingFilePath',
+            'existingPosterName',
+            'existingPosterPath',
+            'existingFileSuratTugas',
+            'existingFileSuratTugasPath',
+            'existingFileSertifikat',
+            'existingFileSertifikatPath'
         ));
     }
 

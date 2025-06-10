@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use App\Models\ProgramStudi;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -112,5 +114,101 @@ class AuthController extends Controller
 
         return redirect('/login')
             ->with('success', 'Registrasi berhasil. Silakan login dengan akun Anda.');
+    }
+
+    public function showForgotPassword()
+    {
+        return view('auth.login');
+    }
+
+    public function cekUserInput(Request $request)
+    {
+        $input = $request->input('user_input');
+
+        $mahasiswa = Mahasiswa::where('nim', $input)
+            ->orWhere('username', $input)
+            ->orWhere('nama', $input)
+            ->first();
+
+        $dosen = Dosen::where('nidn', $input)
+            ->orWhere('username', $input)
+            ->orWhere('nama', $input)
+            ->first();
+
+        if ($mahasiswa) {
+            return redirect('/ganti_password')
+                ->with('success', 'Akun ditemukan. Silakan lanjutkan proses ganti password.')
+                ->with('user_type', 'mahasiswa')
+                ->with('user_data', [
+                    'id' => $mahasiswa->id,
+                    'nim' => $mahasiswa->nim,
+                    'username' => $mahasiswa->username,
+                    'nama' => $mahasiswa->nama,
+                ]);
+        } elseif ($dosen) {
+            return redirect('/ganti_password')
+                ->with('success', 'Akun ditemukan. Silakan lanjutkan proses ganti password.')
+                ->with('user_type', 'dosen')
+                ->with('user_data', [
+                    'id' => $dosen->id,
+                    'nidn' => $dosen->nidn,
+                    'username' => $dosen->username,
+                    'nama' => $dosen->nama,
+                ]);
+        } else {
+            return redirect('/forgot_password')
+                ->with('error', 'Data tidak ditemukan. Silakan cek kembali input Anda.');
+        }
+    }
+
+    public function showGantiPassword()
+    {
+        return view('auth.login');
+    }
+
+
+    public function simpanPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_type' => 'required|in:mahasiswa,dosen',
+            'id' => 'required|integer',
+            'password_input' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            ],
+        ], [
+            'password_input.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password_input.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('user_type', $request->user_type)
+                ->with('user_data', ['id' => $request->id]);
+        }
+
+        $userType = $request->input('user_type');
+        $id = $request->input('id');
+        $passwordBaru = $request->input('password_input');
+
+        if ($userType === 'mahasiswa') {
+            $user = Mahasiswa::find($id);
+        } else {
+            $user = Dosen::find($id);
+        }
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User tidak ditemukan.');
+        }
+
+        $user->password = Hash::make($passwordBaru);
+        $user->save();
+
+        return redirect('/login')->with('success', 'Password berhasil diubah. Silakan login dengan password baru.');
     }
 }

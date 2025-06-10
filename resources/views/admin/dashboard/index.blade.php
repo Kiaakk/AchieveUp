@@ -379,133 +379,73 @@
         </div>
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-                const prestasiData = [65, 59, 80, 81, 56, 55, 40];
+    <script>
+        const Utils = {
+            CHART_COLORS: {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                blue: 'rgb(54, 162, 235)',
+                purple: 'rgb(153, 102, 255)',
+                grey: 'rgb(201, 203, 207)'
+            },
+            transparentize: function(color, opacity) {
+                var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+                if (typeof color === 'string' && color.startsWith('rgb(')) {
+                    return color.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`);
+                }
+                console.warn(
+                    "Utils.transparentize expects an rgb string for best results with current implementation.");
+                return color;
+            }
+        };
 
-                const primaryColor = '#6366F1';
-                const secondaryColor = '#8B5CF6';
-                const tertiaryColor = '#EC4899';
-                const quaternaryColor = '#F97316';
+        const ctx = document.getElementById('myBarChart').getContext('2d');
 
-                const defaultOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: {
-                                    family: 'Inter, system-ui, sans-serif',
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            titleColor: '#1F2937',
-                            bodyColor: '#4B5563',
-                            borderColor: 'rgba(203, 213, 225, 0.5)',
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            padding: 12,
-                            boxPadding: 6,
-                            usePointStyle: true,
-                            callbacks: {
-                                // Custom tooltip formatting
-                                labelPointStyle: function() {
-                                    return {
-                                        pointStyle: 'rectRounded',
-                                        rotation: 0
-                                    };
-                                }
-                            }
+        const newBorderColor = '#6041CE';
+        const newBackgroundColor = 'rgba(96, 65, 206, 0.5)';
+
+        const myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Pengajuan',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    borderColor: newBorderColor,
+                    backgroundColor: newBackgroundColor,
+                    borderWidth: 2,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
                         }
                     }
-                };
-
-                // BAR CHART
-                const barCtx = document.getElementById('barChart').getContext('2d');
-
-                const barGradient = barCtx.createLinearGradient(0, 0, 0, 400);
-                barGradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
-                barGradient.addColorStop(1, 'rgba(99, 102, 241, 0.2)');
-
-                const barChart = new Chart(barCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: months,
-                        datasets: [{
-                            label: 'Prestasi',
-                            data: prestasiData,
-                            backgroundColor: barGradient,
-                            borderColor: primaryColor,
-                            borderWidth: 2,
-                            borderRadius: 6,
-                            borderSkipped: false,
-                            hoverBackgroundColor: primaryColor
-                        }]
-                    },
-                    options: {
-                        ...defaultOptions,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    drawBorder: false,
-                                    color: 'rgba(0, 0, 0, 0.05)'
-                                },
-                                ticks: {
-                                    font: {
-                                        family: 'Inter, system-ui, sans-serif',
-                                        size: 11
-                                    },
-                                    color: '#6B7280'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false,
-                                    drawBorder: false
-                                },
-                                ticks: {
-                                    font: {
-                                        family: 'Inter, system-ui, sans-serif',
-                                        size: 11
-                                    },
-                                    color: '#6B7280'
-                                }
-                            }
-                        },
-                        plugins: {
-                            ...defaultOptions.plugins,
-                            tooltip: {
-                                ...defaultOptions.plugins.tooltip,
-                                callbacks: {
-                                    ...defaultOptions.plugins.tooltip.callbacks,
-                                    title: function(tooltipItems) {
-                                        return 'Bulan: ' + tooltipItems[0].label;
-                                    },
-                                    label: function(context) {
-                                        return `Total Prestasi: ${context.parsed.y}`;
-                                    }
-                                }
-                            }
+                },
+                elements: {
+                    bar: {
+                        borderRadius: {
+                            topLeft: 8,
+                            topRight: 8,
+                            bottomLeft: 8,
+                            bottomRight: 8
                         }
                     }
-                });
-
-                // DONUT CHART
-                const donutCtx = document.getElementById('donutChart').getContext('2d');
+                }
+            }
+        });
+    </script>
 
                 const donutChart = new Chart(donutCtx, {
                     type: 'doughnut',
@@ -542,16 +482,129 @@
                                 align: 'center'
                             }
                         }
-                    }
-                });
+                    },
+                    title: {
+                        display: false,
+                        text: 'Jenis Prestasi'
+                    },
+                }
+            }
+        };
 
-                const metodeSelect = document.getElementById('metode');
-                if (metodeSelect) {
-                    metodeSelect.addEventListener('change', function() {
-                        console.log(`Method changed to: ${this.value}`);
-                    });
+        const ctxDonut = document.getElementById('myDonutChart');
+        if (ctxDonut) {
+            const myDonutChart = new Chart(ctxDonut.getContext('2d'), donutConfig);
+        } else {
+            console.error("Peringatan: Elemen canvas dengan id 'myDonutChart' tidak ditemukan saat mencoba membuat chart.");
+        }
+    </script>
+
+    {{-- Tampilkan Tabel peringkat mahasiswa dengan 2 pilihan metode pemeringkatan entropy dan electre --}}
+    <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+
+        <label for="metode" class="block mb-2 text-sm font-medium text-gray-900">Pilih Metode Pemeringkatan</label>
+        <select id="metode"
+            class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option value="entropy">Entropy</option>
+            <option value="electre">Electre</option>
+        </select>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Nama Mahasiswa</th>
+                        <th scope="col" class="px-6 py-3">Peringkat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4">John Doe</td>
+                        <td class="px-6 py-4">1</td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4">Jane Smith</td>
+                        <td class="px-6 py-4">2</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="bg-white border-b">
+                        <td colspan="2" class="px-6 py-4 text-center">
+                            <a href="{{ route('admin.dashboard.entropy') }}"
+                                class="text-blue-600 hover:underline">Langkah-langkah Entropy</a>
+                            |
+                            <a href="{{ route('admin.dashboard.electre') }}"
+                                class="text-blue-600 hover:underline">Langkah-langkah Electre</a>
+                            |
+                            <a href="{{ route('admin.dashboard.aras') }}"
+                                class="text-blue-600 hover:underline">Langkah-langkah Aras</a>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function updateChart(metode) {
+            const ctx = document.getElementById('chartPrestasi').getContext('2d');
+            const data = {
+                labels: ['Jan', 'Feb', 'Mar'],
+                datasets: [{
+                    label: 'Jumlah Prestasi',
+                    data: metode === 'entropy' ? [5, 8, 4] : [3, 6, 9],
+                    backgroundColor: '#6041CE',
+                }]
+            };
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
-        </script>
-    @endpush
+        }
+
+        document.getElementById('metode').addEventListener('change', function() {
+            updateChart(this.value);
+        });
+
+        updateChart('entropy');
+    </script>
+    <script>
+        const ctx = document.getElementById('chartPrestasi').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar'],
+                datasets: [{
+                    label: 'Jumlah Prestasi',
+                    data: [5, 8, 4],
+                    backgroundColor: '#6041CE',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

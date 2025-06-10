@@ -269,6 +269,7 @@
                     let entriesToShow = parseInt($('#show-entry').val()) || 5;
                     let tbody = $('#prestasi-body');
 
+                    // First sort by status priority (pending first), then filter by search and status
                     let filtered = prestasiData.sort((a, b) => {
                         if (a.status === 'pending' && b.status !== 'pending') return -1;
                         if (a.status !== 'pending' && b.status === 'pending') return 1;

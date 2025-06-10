@@ -1,7 +1,33 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+    use App\Models\PengajuanPrestasiAdminNote;
+    use App\Models\PengajuanLombaAdminNote;
+
+    $adminId = Auth::guard('dosen')->id();
+
+    $unreadPengajuanPrestasi = PengajuanPrestasiAdminNote::where('dosen_id', $adminId)
+        ->where('is_accepted', false)
+        ->count();
+
+    $unreadPengajuanLomba = PengajuanLombaAdminNote::where('dosen_id', $adminId)->where('is_accepted', false)->count();
+
+    $notifUnread = $unreadPengajuanPrestasi + $unreadPengajuanLomba;
+@endphp
+
 <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow px-8 py-4 flex items-center justify-between">
     <div class="text-base font-medium text-gray-700">
     </div>
+    
     <div class="flex items-center space-x-3 justify-end relative">
+        <a href="{{ url('admin/notifikasi') }}"
+            class="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition mr-2"
+            title="Notifikasi">
+            <i class="fas fa-bell text-gray-600"></i>
+            @if ($notifUnread > 0)
+                <span
+                    class="absolute top-2 right-2 block w-2.5 h-2.5 rounded-full bg-red-600 border-2 border-white"></span>
+            @endif
+        </a>
         <div class="flex flex-col text-right leading-tight">
             <span
                 class="text-sm font-medium text-gray-800">{{ Auth::guard('dosen')->user()->nama ?? 'Nama Pengguna' }}</span>
@@ -44,6 +70,7 @@
             </div>
         </div>
     </div>
+    
 </header>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

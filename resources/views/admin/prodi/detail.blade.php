@@ -173,10 +173,9 @@
                                 @endif
 
                                 <!-- Statistics Row -->
-                                <<<<<<< Updated upstream <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    =======
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        >>>>>>> Stashed changes
                                         <div class="bg-white rounded-lg p-4 border border-gray-200">
                                             <div class="flex items-center gap-3">
                                                 <div
@@ -197,7 +196,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <<<<<<< Updated upstream <div
+                                        <div
                                             class="bg-white rounded-lg p-4 border border-gray-200">
                                             <div class="flex items-center gap-3">
                                                 <div
@@ -243,56 +242,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    =======
-                                    >>>>>>> Stashed changes
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <<<<<<< Updated upstream <!-- Action Buttons Card -->
-                <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-                    <div class="border-b border-gray-100 p-6">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                                Aksi Admin
-                            </h2>
-
-                            <div class="flex gap-3">
-                                <a href="{{ url("admin/prodi/edit/{$prodi->id}") }}"
-                                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition-colors font-medium text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    Edit Data
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-6">
-                        <div class="flex justify-start">
-                            <a href="{{ url('admin/prodi') }}"
-                                class="flex items-center gap-2 px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
-                                Kembali ke Daftar Program Studi
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                =======
-                >>>>>>> Stashed changes
         </div>
 
         <!-- Sidebar -->
@@ -342,7 +296,7 @@
                                 </p>
                             </div>
                         </div>
-                        <<<<<<< Updated upstream <div
+                        <div
                             class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                             <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-600" fill="none"
@@ -417,8 +371,6 @@
                             </div>
                         </div>
                     @endif
-                    =======
-                    >>>>>>> Stashed changes
                 </div>
             </div>
         </div>
@@ -447,15 +399,12 @@
                     <div class="space-y-3">
                         <div>
                             <h6 class="font-medium text-gray-800">Fungsi</h6>
-                            <ul class="text-gray-600 text-xs mt-1 space-y-1">
-                                <<<<<<< Updated upstream <li>• Klasifikasi mahasiswa berdasarkan jurusan</li>
+                            <ul class="text-gray-600 text-xs mt-1 space-y-1"><li>• Klasifikasi mahasiswa berdasarkan jurusan</li>
                                     <li>• Filter prestasi berdasarkan program studi</li>
                                     <li>• Statistik pencapaian per program</li>
                                     <li>• Laporan kinerja akademik</li>
-                                    =======
                                     <li>• Klasifikasi mahasiswa</li>
                                     <li>• Statistik pencapaian per program</li>
-                                    >>>>>>> Stashed changes
                             </ul>
                         </div>
 
@@ -473,8 +422,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 @endsection
 

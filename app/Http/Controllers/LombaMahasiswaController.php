@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bidang;
+use App\Models\Dosen;
 use App\Models\Lomba;
+use App\Models\PengajuanLombaAdminNote;
 use App\Models\PengajuanLombaMahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -48,8 +50,8 @@ class LombaMahasiswaController extends Controller
                 'tanggal_daftar' => $lomba->tanggal_daftar,
                 'tanggal_daftar_terakhir' => $lomba->tanggal_daftar_terakhir,
                 'periode_pendaftaran' => Carbon::parse($lomba->tanggal_daftar)->format('d M Y') .
-                ' s.d. ' .
-                Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
+                    ' s.d. ' .
+                    Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
                 'link' => $lomba->url,
                 'tingkat' => $lomba->tingkat,
                 'tingkat_warna' => $warnaTingkat,
@@ -101,8 +103,8 @@ class LombaMahasiswaController extends Controller
                 'tanggal_daftar' => $lomba->tanggal_daftar,
                 'tanggal_daftar_terakhir' => $lomba->tanggal_daftar_terakhir,
                 'periode_pendaftaran' => Carbon::parse($lomba->tanggal_daftar)->format('d M Y') .
-                ' s.d. ' .
-                Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
+                    ' s.d. ' .
+                    Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
                 'link' => $lomba->url,
                 'tingkat' => $lomba->tingkat,
                 'tingkat_warna' => $warnaTingkat,
@@ -169,7 +171,7 @@ class LombaMahasiswaController extends Controller
 
     public function store(Request $request)
     {
-       
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'tempat' => 'required|string|max:255',
@@ -220,12 +222,26 @@ class LombaMahasiswaController extends Controller
 
         $lomba->bidang()->sync($validated['bidang']);
 
-        PengajuanLombaMahasiswa::create([
+        $pengajuan = PengajuanLombaMahasiswa::create([
             'lomba_id' => $lomba->id,
             'mahasiswa_id' => auth()->guard('mahasiswa')->id(),
             'status' => 'pending',
         ]);
 
+        $adminList = Dosen::where('role', 'admin')->get();
+
+        $data = [];
+        foreach ($adminList as $admin) {
+            $data[] = [
+                'pengajuan_lomba_mahasiswa_id' => $pengajuan->id,
+                'dosen_id' => $admin->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        if (!empty($data)) {
+            PengajuanLombaAdminNote::insert($data);
+        }
         return redirect()->route('mahasiswa.lomba.index')->with('success', 'Pengajuan lomba berhasil dikirim dan menunggu persetujuan admin.');
     }
 
@@ -270,7 +286,7 @@ class LombaMahasiswaController extends Controller
 
     public function showPengajuan($id)
     {
-        
+
         if (!Auth::guard('mahasiswa')->check()) {
             abort(403, 'Akses ditolak. Silakan login sebagai mahasiswa.');
         }

@@ -33,93 +33,166 @@
         <div class="absolute w-[400px] h-[400px] bg-[#FEFEFE] rounded-full blur-3xl opacity-30 -z-10 top-1 left-2">
         </div>
 
-        @if(request()->is('login'))
-        <form method="POST" action="{{ url('/login') }}"
-            class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
-            @csrf
-            <div class="flex justify-center mb-4">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
-            </div>
-            <p class="font-primary text-2xl text-center font-medium text-gray-800 mb-10">Login ke Sistem</p>
+        @if (request()->is('login'))
+            <form method="POST" action="{{ url('/login') }}"
+                class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+                @csrf
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
+                </div>
+                <p class="font-primary text-2xl text-center font-medium text-gray-800 mb-10">Login ke Sistem</p>
 
-            <div class="mb-5">
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username / NIM</label>
-                <input type="text" id="username" name="username" required autofocus class="input">
-            </div>
+                <div class="mb-5">
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username / NIM</label>
+                    <input type="text" id="username" name="username" required autofocus class="input">
+                </div>
 
-            <div class="mb-8">
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" id="password" name="password" required class="input">
-            </div>
+                <div class="mb-8">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="password" name="password" required class="input">
+                </div>
 
-            <button type="submit" class="button-primary w-full">
-                Login
-            </button>
+                <button type="submit" class="button-primary w-full">
+                    Login
+                </button>
 
-            <div class="mt-4 text-center">
-                <p class="text-sm text-gray-700">
-                    Mahasiswa belum punya akun?
-                    <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">Register di sini</a>
-                </p>
-            </div>
-        </form>
-
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-700">
+                        Mahasiswa belum punya akun?
+                        <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">Register di
+                            sini</a>
+                    </p>
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-700">
+                        <a href="{{ route('forgot_password') }}" class="text-blue-600 font-medium hover:underline">Lupa
+                            Password</a>
+                    </p>
+                </div>
+            </form>
         @elseif(request()->is('register'))
-        {{-- REGISTER FORM --}}
-        <form method="POST" action="{{ route('register.post') }}"
-            class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
-            @csrf
-            <div class="flex justify-center mb-4">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
-            </div>
-            <p class="text-2xl text-center font-medium text-gray-800 mb-10">Registrasi Mahasiswa</p>
+            {{-- REGISTER FORM --}}
+            <form method="POST" action="{{ route('register.post') }}"
+                class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+                @csrf
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
+                </div>
+                <p class="text-2xl text-center font-medium text-gray-800 mb-10">Registrasi Mahasiswa</p>
 
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">NIM</label>
-                <input type="text" name="nim" class="input" value="{{ old('nim') }}" placeholder="Masukkan NIM" required>
-            </div>
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">Nama</label>
-                <input type="text" name="nama" class="input" value="{{ old('nama') }}" placeholder="Masukkan Nama" required>
-            </div>
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">Username</label>
-                <input type="text" name="username" class="input" value="{{ old('username') }}" placeholder="Masukkan Username" required>
-            </div>
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">Email</label>
-                <input type="email" name="email" class="input" value="{{ old('email') }}" placeholder="Masukkan Email" required>
-            </div>
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">Kata Sandi</label>
-                <input type="password" name="password" class="input" placeholder="Minimal 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka" required>
-            </div>
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 mb-1">Konfirmasi Kata Sandi</label>
-                <input type="password" name="password_confirmation" class="input" placeholder="Masukkan Kembali Kata Sandi" required>
-            </div>
-            <div class="mb-6">
-                <label class="block text-sm text-gray-700 mb-1">Program Studi</label>
-                <select name="program_studi_id" class="input" required>
-                    <option value="">-- Pilih Program Studi --</option>
-                    @foreach($programStudis as $prodi)
-                        <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                            {{ $prodi->nama }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">NIM</label>
+                    <input type="text" name="nim" class="input" value="{{ old('nim') }}"
+                        placeholder="Masukkan NIM" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">Nama</label>
+                    <input type="text" name="nama" class="input" value="{{ old('nama') }}"
+                        placeholder="Masukkan Nama" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">Username</label>
+                    <input type="text" name="username" class="input" value="{{ old('username') }}"
+                        placeholder="Masukkan Username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" class="input" value="{{ old('email') }}"
+                        placeholder="Masukkan Email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">Kata Sandi</label>
+                    <input type="password" name="password" class="input"
+                        placeholder="Minimal 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm text-gray-700 mb-1">Konfirmasi Kata Sandi</label>
+                    <input type="password" name="password_confirmation" class="input"
+                        placeholder="Masukkan Kembali Kata Sandi" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm text-gray-700 mb-1">Program Studi</label>
+                    <select name="program_studi_id" class="input" required>
+                        <option value="">-- Pilih Program Studi --</option>
+                        @foreach ($programStudis as $prodi)
+                            <option value="{{ $prodi->id }}"
+                                {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <button type="submit" class="button-primary w-full">Daftar</button>
+                <button type="submit" class="button-primary w-full">Daftar</button>
 
-            <div class="mt-4 text-center">
-                <p class="text-sm text-gray-700">
-                    Sudah punya akun?
-                    <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">Login di sini</a>
-                </p>
-            </div>
-        </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-700">
+                        Sudah punya akun?
+                        <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">Login di
+                            sini</a>
+                    </p>
+                </div>
+            </form>
+        @elseif(request()->is('forgot_password'))
+            <form method="POST" action="{{ route('cek_user_input.post') }}"
+                class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+                @csrf
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
+                </div>
+                <p class="text-2xl text-center font-medium text-gray-800 mb-10">Lupa Password</p>
+
+                <div class="mb-3">
+                    <input type="text" name="user_input" class="input" value="{{ old('username') }}"
+                        placeholder="Masukkan Username/NIM/Nama" required>
+                </div>
+
+                <button type="submit" class="button-primary w-full">Cek Username</button>
+
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-700">
+                        Sudah punya akun?
+                        <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">Login di
+                            sini</a>
+                    </p>
+                </div>
+            </form>
+        @elseif(request()->is('ganti_password'))
+            <form method="POST" action="{{ route('simpan_password.post') }}"
+                class="w-3/4 max-w-md bg-white/30 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+                @csrf
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14">
+                </div>
+                <p class="text-2xl text-center font-medium text-gray-800 mb-10">Ganti Password</p>
+
+                {{-- Tambahkan input hidden user_type dan id --}}
+                <input type="hidden" name="user_type" value="{{ session('user_type') }}">
+                <input type="hidden" name="id" value="{{ session('user_data.id') }}">
+
+                <div class="mb-3">
+                    <input type="password" name="password_input" class="input" value="{{ old('password') }}"
+                        placeholder="Masukkan password yang baru" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password_input_confirmation" class="input" value="{{ old('password') }}"
+                        placeholder="Konfirmasi password yang baru" required>
+                </div>
+
+
+                <button type="submit" class="button-primary w-full">Simpan Password</button>
+
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-700">
+                        Sudah punya akun?
+                        <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">Login di
+                            sini</a>
+                    </p>
+                </div>
+            </form>
         @endif
+
+
     </div>
     </div>
 </body>

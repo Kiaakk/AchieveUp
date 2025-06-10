@@ -4,7 +4,9 @@
 
 @section('content')
     <div class="mx-auto max-w-full h-full flex flex-col">
+        <!-- Tab-like header + content container -->
         <div>
+            <!-- Header styled as a tab -->
             <div
                 class="inline-block px-5 py-2.5 text-sm font-medium bg-white border-t border-l border-r border-gray-200 rounded-t-lg text-[#6041CE] font-semibold">
                 Data Prestasi
@@ -63,10 +65,12 @@
                             </tr>
                         </thead>
                         <tbody id="prestasi-body" class="bg-white divide-y divide-gray-200 overflow-y-auto">
+                            <!-- Data will be loaded here -->
                         </tbody>
                     </table>
                 </div>
 
+                <!-- Pagination controls -->
                 <div class="px-6 py-4 border-t border-gray-200">
                     <div class="flex items-center justify-between flex-wrap gap-4">
                         <p id="prestasi_info" class="text-sm text-gray-600"></p>

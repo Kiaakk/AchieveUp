@@ -10,6 +10,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\LombaDosenController;
 use App\Http\Controllers\LombaMahasiswaController;
+use App\Http\Controllers\NotifikasiAdmin;
 use App\Http\Controllers\NotifikasiDosenPembimbing;
 use App\Http\Controllers\NotifikasiMahasiswa;
 use App\Http\Controllers\PeriodeController;
@@ -39,6 +40,11 @@ Route::post('login', [AuthController::class, 'postLogin']);
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterMahasiswa'])->name('register');
 Route::post('/register', [AuthController::class, 'registerMahasiswa'])->name('register.post');
+Route::get('/forgot_password', [AuthController::class, 'showForgotPassword'])->name('forgot_password');
+Route::post('/cek_user_input', [AuthController::class, 'cekUserInput'])->name('cek_user_input.post');
+Route::get('/ganti_password', [AuthController::class, 'showGantiPassword'])->name('ganti_password');
+Route::post('/forgot_password', [AuthController::class, 'forgotPassword'])->name('forgot_password.post');
+Route::post('/simpan_password', [AuthController::class, 'simpanPassword'])->name('simpan_password.post');
 
 Route::get('/landing', [LandingController::class, 'index']);
 
@@ -152,6 +158,19 @@ Route::middleware(['dosen:admin'])->prefix('admin')->name('admin.')->group(funct
         Route::get('/getAll', [RekomendasiLombaController::class, 'getAll'])->name('getAll');
         Route::get('/{id}', [RekomendasiLombaController::class, 'show'])->name('detail');
         Route::delete('/delete/{id}', [RekomendasiLombaController::class, 'destroy'])->name('delete');
+    });
+
+    Route::prefix('notifikasi')->name('notifikasi.')->group(function () {
+        Route::get('/', [NotifikasiAdmin::class, 'index'])->name('index');
+        Route::get('getAll', [NotifikasiAdmin::class, 'getAllNotifikasi'])->name('getAll');
+        Route::post('/markAsRead', [NotifikasiAdmin::class, 'markAsRead'])->name('markAsRead');
+        Route::post('/markAllAsRead', [NotifikasiAdmin::class, 'markAllAsRead'])->name('markAllAsRead');
+        Route::post('/destroyIsAccpeptedMessege', [NotifikasiAdmin::class, 'destroyIsAccpeptedMessege'])->name('destroyIsAccpeptedMessege');
+
+        // Dynamic routes based on type
+        Route::get('{type}/{id}', [NotifikasiAdmin::class, 'show'])->name('detail');
+        Route::delete('{type}/{id}', [NotifikasiAdmin::class, 'destroy'])->name('delete');
+
     });
 });
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bidang;
 use App\Models\Prestasi;
 use App\Models\PrestasiNote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VerifikasiPrestasiController extends Controller
 {
@@ -153,4 +155,14 @@ class VerifikasiPrestasiController extends Controller
 
         return view('admin.prestasi.detail', compact('breadcrumb', 'page', 'activeMenu', 'prestasi'));
     }
+
+    public function export()
+    {
+        $prestasis = Prestasi::with(['dosens', 'mahasiswas.programStudi', 'bidangs.lomba'])
+            ->where('status', 'disetujui')
+            ->get();
+        $pdf = Pdf::loadView('admin.prestasi.export', compact('prestasis'))->setPaper('a4', 'landscape');
+        return $pdf->download('daftar-prestasi-disetujui.pdf');
+    }
+
 }
